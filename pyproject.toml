@@ -1,0 +1,11 @@
+[project]
+name = "my-open3d-project"
+version = "0.1.0"
+description = "It's my first open3d project"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "laspy>=2.7.0",
+    "numpy>=2.5.0",
+    "open3d>=0.19.0",
+]
