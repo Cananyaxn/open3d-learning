@@ -837,6 +837,7 @@ dependencies = [
     { name = "laspy" },
     { name = "numpy" },
     { name = "open3d" },
+    { name = "python-dotenv" },
 ]
 
 [package.metadata]
@@ -844,6 +845,7 @@ requires-dist = [
     { name = "laspy", specifier = ">=2.7.0" },
     { name = "numpy", specifier = ">=2.5.0" },
     { name = "open3d", specifier = ">=0.19.0" },
+    { name = "python-dotenv", specifier = ">=1.2.2" },
 ]
 
 [[package]]
