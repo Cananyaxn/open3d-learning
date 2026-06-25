@@ -4,7 +4,7 @@
 git clone https://github.com/Cananyaxn/open3d-learning.git
 
 # ディレクトリ移動
-cd my_open3d_project
+cd open3d-learning
 
 # 依存パッケージをインストール
 uv sync
