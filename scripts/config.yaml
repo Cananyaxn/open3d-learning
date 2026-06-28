@@ -1,0 +1,31 @@
+# GeoJSONフィルタリング設定ファイル
+# python filter_geojson.py -c config.yaml で実行
+
+input: ../data/raw/N13-24_5239_GEOJSON/N13-24_5239.geojson   # 入力ファイル（共通）
+
+regions:
+  # ── 実験1 ──────────────────────────────────────
+  - name: 上流部
+    output: ../data/processed/road1.geojson
+    min_lon: 139.079103
+    max_lon: 139.083615
+    min_lat: 35.111720
+    max_lat: 35.117171
+    mode: intersects   # intersects（一部重なる）or contains（完全に内側）
+
+  # ── 実験2 ──────────────────────────────────────
+  - name: 下流部
+    output: ../data/processed/road2.geojson
+    min_lon: 139.083503
+    max_lon: 139.089415
+    min_lat: 35.108620
+    max_lat: 35.113071
+    # mode を省略すると intersects が使われる
+
+  # ── 範囲3（テンプレート：不要なら削除してください） ──
+  # - name: エリア名
+  #   output: filtered_output.geojson
+  #   min_lon: 000.00
+  #   max_lon: 000.00
+  #   min_lat: 00.00
+  #   max_lat: 00.00
