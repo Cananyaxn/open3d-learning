@@ -1,0 +1,21 @@
+# 道路3D化 設定ファイル
+# python main.py -c config_3d.yaml で実行
+
+# ── 入力ファイル ──────────────────────────────────
+road: data/processed/road1.geojson   # フィルタ済みの道路 GeoJSON
+dem:  data/raw/experiment1_before_DEM.tif                             # GeoTIFF DEM ファイル
+
+# ── 出力 ──────────────────────────────────────────
+output_ply: output/road_3d.ply   # 点群ファイル（MeshLab / CloudCompare でも開ける）
+
+# ── 表示オプション ────────────────────────────────
+z_scale: 1.0
+# 高さ方向の誇張倍率。平坦な地形で起伏を強調したいときは 2〜5 程度に増やす
+
+color_by_height: true
+# true  → 標高に応じて Jet カラーマップで着色（低=青, 中=緑, 高=赤）
+# false → すべて白
+
+# ── DEM nodata の扱い ─────────────────────────────
+nodata_fill: 0.0
+# DEM の範囲外や海域など、データのない領域に割り当てる標高値（メートル）
