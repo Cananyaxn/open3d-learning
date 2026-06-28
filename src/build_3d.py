@@ -98,11 +98,19 @@ def build(
     all_colors = []  # 頂点色を積み上げる
 
     # 色付けに使う標高の正規化値（中心線頂点ベース）
-    z_norm = (z - z.min()) / (z.max() - z.min() + 1e-9)
+    # NaN を除いた min/max で正規化し、NaN 頂点は 0 扱いにする
+    z_valid_min = np.nanmin(z)
+    z_valid_max = np.nanmax(z)
+    z_norm = (z - z_valid_min) / (z_valid_max - z_valid_min + 1e-9)
+    z_norm = np.where(np.isfinite(z_norm), z_norm, 0.0)
 
     for seg_idx, (i0, i1) in enumerate(segments):
         p0 = xyz_center[i0]   # 始点 (x, y, z)
         p1 = xyz_center[i1]   # 終点 (x, y, z)
+
+        # 始点・終点どちらかがDEM範囲外（NaN）なら線分をスキップ
+        if np.isnan(p0[2]) or np.isnan(p1[2]):
+            continue
 
         # 進行方向ベクトル（XY 平面のみ。Z は法線計算に不要）
         dx, dy = p1[0] - p0[0], p1[1] - p0[1]
@@ -134,18 +142,18 @@ def build(
         # 頂点色：始点・終点の標高平均で4頂点を統一着色
         if color_by_height:
             t = float((z_norm[i0] + z_norm[i1]) / 2)
-            # dummy = np.array([[t]])
-            c = _jet_colormap(np.array([t]))[0]
+            # _jet_colormap は (N,) 配列を受け取る設計のため np.array で包む
+            c = _jet_colormap(np.array([t]))[0]   # shape (3,)
         else:
             c = np.array([1.0, 1.0, 1.0])
         all_colors.extend([c, c, c, c])
-      
+
     if not all_verts:
         raise RuntimeError('有効な線分が1本もありませんでした。データを確認してください。')
 
-    verts  = np.array(all_verts,  dtype=np.float64)
-    tris   = np.array(all_tris,   dtype=np.int32)
-    colors = np.array(all_colors, dtype=np.float64)
+    verts  = np.array(all_verts,  dtype=np.float64)   # (N*4, 3)
+    tris   = np.array(all_tris,   dtype=np.int32)     # (N*2, 3)
+    colors = np.array(all_colors, dtype=np.float64)   # (N*4, 3)
 
     mesh = o3d.geometry.TriangleMesh()
     mesh.vertices       = o3d.utility.Vector3dVector(verts)
@@ -156,5 +164,5 @@ def build(
     print(f"[build_3d] 頂点数(メッシュ): {len(verts):,}  三角形数: {len(tris):,}")
     print(f"[build_3d] x範囲: {x.min():.1f} 〜 {x.max():.1f} m")
     print(f"[build_3d] y範囲: {y.min():.1f} 〜 {y.max():.1f} m")
-    print(f"[build_3d] z範囲: {z.min():.1f} 〜 {z.max():.1f} m  (z_scale={z_scale})")
+    print(f"[build_3d] z範囲: {np.nanmin(z):.1f} 〜 {np.nanmax(z):.1f} m  (z_scale={z_scale})")
     return mesh, xyz_center
