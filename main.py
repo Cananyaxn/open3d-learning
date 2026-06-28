@@ -47,7 +47,7 @@ def main():
     points, segments, width_classes = load_road.load(road_path, width_property)
 
     print("\n[2/4] DEM から標高サンプリング")
-    dem_crs = cfg.get("dem_crs", None)   # DEMにCRS情報がない場合はconfigで指定
+    dem_crs = cfg.get('dem_crs', None)   # DEMにCRS情報がない場合はconfigで指定
     elevations, xy_meters = sample_dem.sample(dem_path, points, nodata_fill,
                                                geojson_path=road_path, dem_crs_override=dem_crs)
 
@@ -61,7 +61,8 @@ def main():
     )
 
     print("\n[4/4] Open3D 表示 & PLY 保存")
-    visualize.show(mesh, xyz_center, output_ply)
+    extra_ply_files = cfg.get("extra_ply_files", [])   # 重ね合わせる追加PLYファイル
+    visualize.show(mesh, xyz_center, output_ply, extra_ply_files=extra_ply_files)
 
     print("\n完了!")
 
