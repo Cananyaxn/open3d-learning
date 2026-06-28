@@ -54,7 +54,12 @@ def show(
         height=800,
         zoom=0.5,
         front=[0.0, -1.0, 0.5],
-        lookat=[0.0, 0.0, float(xyz_center[:, 2].mean())],
+        # lookat をデータの重心に合わせる（絶対座標を維持しているため必須）
+        lookat=[
+            float(np.nanmean(xyz_center[:, 0])),
+            float(np.nanmean(xyz_center[:, 1])),
+            float(np.nanmean(xyz_center[:, 2])),
+        ],
         up=[0.0, 0.0, 1.0],
         mesh_show_back_face=True,   # 裏面（道路の下側）も描画する
     )

@@ -149,6 +149,10 @@ def sample(
             elevations.append(elev)
 
     result = np.array(elevations, dtype=np.float64)
+    # DEMのCRS（メートル系）に変換済みのXY座標を配列として返す
+    # build_3d.py はこれをそのまま使うため、経度緯度への再変換が不要になる
+    xy_transformed = np.array(xy, dtype=np.float64)  # shape (N, 2)
+
     valid = int(np.isfinite(result).sum())
     total_pts = len(result)
     print(f"[sample_dem] 標高範囲 : {np.nanmin(result):.1f} m 〜 {np.nanmax(result):.1f} m")
@@ -156,4 +160,4 @@ def sample(
           f"（DEMカバー率 {valid/total_pts*100:.1f}%）")
     if valid == 0:
         print("[sample_dem] ⚠️  有効な標高が0点です。diagnose.py で範囲・CRSを確認してください。")
-    return result
+    return result, xy_transformed

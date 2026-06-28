@@ -76,17 +76,18 @@ def build(
     elevations: np.ndarray,
     segments: list[tuple[int, int]],
     width_classes: list[int],
+    xy_meters: np.ndarray,        # sample_dem で変換済みのメートルXY座標 shape=(N,2)
     z_scale: float = 1.0,
     color_by_height: bool = True,
     width_map: dict[int, float] | None = None,
 ):
     wmap = {**DEFAULT_WIDTH_MAP, **(width_map or {})}
 
-    lons = np.array([p[0] for p in points])
-    lats = np.array([p[1] for p in points])
-    origin_lon, origin_lat = lons.mean(), lats.mean()
-
-    x, y = _lonlat_to_meters(lons, lats, origin_lon, origin_lat)
+    # sample_dem で変換済みのメートル座標をそのまま使う。
+    # 重心移動はしない。絶対座標を維持することで
+    # CloudCompare 等で元の点群と位置が一致する。
+    x = xy_meters[:, 0]
+    y = xy_meters[:, 1]
     z = elevations * z_scale
 
     # 中心線頂点の XYZ（PLY 保存・座標軸サイズ計算に流用）

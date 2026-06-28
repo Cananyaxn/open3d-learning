@@ -47,12 +47,14 @@ def main():
     points, segments, width_classes = load_road.load(road_path, width_property)
 
     print("\n[2/4] DEM から標高サンプリング")
-    dem_crs = cfg.get("dem_crs", None)
-    elevations = sample_dem.sample(dem_path, points, nodata_fill, geojson_path=road_path, dem_crs_override=dem_crs)
+    dem_crs = cfg.get("dem_crs", None)   # DEMにCRS情報がない場合はconfigで指定
+    elevations, xy_meters = sample_dem.sample(dem_path, points, nodata_fill,
+                                               geojson_path=road_path, dem_crs_override=dem_crs)
 
     print("\n[3/4] 幅付き3Dメッシュ構築")
     mesh, xyz_center = build_3d.build(
         points, elevations, segments, width_classes,
+        xy_meters=xy_meters,
         z_scale=z_scale,
         color_by_height=color_by_height,
         width_map=width_map or None,
