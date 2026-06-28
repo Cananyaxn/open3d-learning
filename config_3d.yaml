@@ -6,7 +6,19 @@ road: data/processed/road1.geojson   # フィルタ済みの道路 GeoJSON
 dem:  data/raw/experiment1_before_DEM.tif                             # GeoTIFF DEM ファイル
 
 # ── 出力 ──────────────────────────────────────────
-output_ply: output/road_3d.ply   # 点群ファイル（MeshLab / CloudCompare でも開ける）
+output_ply: output/road_3d_1.ply   # メッシュファイル（MeshLab / CloudCompare でも開ける）
+
+# ── 幅員設定 ──────────────────────────────────────
+width_property: N13_006   # 幅員クラスが格納されている GeoJSON の属性名
+
+# 各クラスの代表幅 (m)。変更したい値だけ上書きすればよい
+# width_map:
+#   1: 2.0    # 3m 未満
+#   2: 4.0    # 3m 〜 5.5m 未満
+#   3: 9.0    # 5.5m 〜 13m 未満
+#   4: 16.0   # 13m 〜 19.5m 未満
+#   5: 22.0   # 19.5m 以上
+#   6: 2.0    # 不明（フォールバック）
 
 # ── 表示オプション ────────────────────────────────
 z_scale: 1.0
