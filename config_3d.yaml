@@ -4,6 +4,7 @@
 # ── 入力ファイル ──────────────────────────────────
 road: data/processed/road1.geojson   # フィルタ済みの道路 GeoJSON
 dem:  data/raw/experiment1_before_DEM.tif                             # GeoTIFF DEM ファイル
+dem_crs: EPSG:6676   # DEMにCRS情報が埋め込まれていない場合に指定。省略時はEPSG:6668と仮定
 
 # ── 出力 ──────────────────────────────────────────
 output_ply: output/road_3d_1.ply   # メッシュファイル（MeshLab / CloudCompare でも開ける）

@@ -47,7 +47,8 @@ def main():
     points, segments, width_classes = load_road.load(road_path, width_property)
 
     print("\n[2/4] DEM から標高サンプリング")
-    elevations = sample_dem.sample(dem_path, points, nodata_fill)
+    dem_crs = cfg.get("dem_crs", None)
+    elevations = sample_dem.sample(dem_path, points, nodata_fill, geojson_path=road_path, dem_crs_override=dem_crs)
 
     print("\n[3/4] 幅付き3Dメッシュ構築")
     mesh, xyz_center = build_3d.build(
