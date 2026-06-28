@@ -85,13 +85,27 @@ def filter_geojson(road_data, region):
         if geom and check_feature(geom, min_lon, max_lon, min_lat, max_lat, mode):
             filtered.append(feature)
 
-    result = {"type": "FeatureCollection", "features": filtered}
-    for key in ("crs", "name", "bbox"):
-        if key in road_data:
-            result[key] = road_data[key]
+    # 元データのメタ属性を引き継ぐ（crs / name / xy_coordinate_resolution など）
+    # "type" と "features" 以外のトップレベルキーをすべてコピーする
+    result = {}
+    for key, val in road_data.items():
+        if key != "features":
+            result[key] = val
+    result["features"] = filtered
 
+    # 出力フォーマット:
+    #   トップレベルは改行あり、feature は1行にまとめてファイルを見やすくする
     with open(output, "w", encoding="utf-8") as f:
-        json.dump(result, f, ensure_ascii=False, separators=(",", ":"))
+        f.write('{\"type\": \"FeatureCollection\"'  )
+        for key, val in result.items():
+            if key in ("type", "features"):
+                continue
+            f.write(",\n" + json.dumps({key: val}, ensure_ascii=False)[1:-1])
+        f.write(",\n\"features\": [\n")
+        for i, feature in enumerate(filtered):
+            comma = "," if i < len(filtered) - 1 else ""
+            f.write("  " + json.dumps(feature, ensure_ascii=False, separators=(", ", ": ")) + comma + "\n")
+        f.write("]}\n")
 
     size_kb = os.path.getsize(output) / 1024
     pct = len(filtered) / total * 100 if total else 0
