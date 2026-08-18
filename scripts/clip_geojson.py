@@ -4,7 +4,7 @@ GeoJSON道路データ バウンディングボックス フィルタリング�
 
 使い方:
     python filter_geojson.py -c config.yaml          # YAMLで複数範囲を一括処理
-    python filter_geojson.py -c config.yaml -n 浜松市中心部  # 特定の範囲のみ実行
+    python filter_geojson.py -c config.yaml -n 上流部  # 特定の範囲のみ実行
 
 YAMLの書き方は config.yaml を参照してください。
 """
